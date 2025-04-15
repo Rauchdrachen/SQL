@@ -1,3 +1,14 @@
+-- Given Instructions --
+
+Write at least 5 queries. Do each of the following at least once:
+
+Use WHERE with one of the following to filter the data in an interesting way.
+ AND, OR, IN, or NOT IN 
+Write a calculation and use an alias to name it.
+Categorize the data in a new way using a CASE expression.
+Use a HAVING clause to determine something interesting about the data by group.
+It may help to use an aggregate function like AVG, SUM, COUNT, MAX, or MIN
+
 
 -- Start of given Table --
 
@@ -60,15 +71,17 @@ VALUES
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
 -- End of provided Table --
--- Start of assigned work --
+--- Start of assigned work ---
 
--- The assignment is to come up with 5 questions that can be answered using the provided table, demonstrating what I have learned so far.
+-- The assignment is to come up with at least 5 questions that can be answered using the provided table, demonstrating what I have learned so far.
 
 select *
 from fortune_companies
+where company_name like 'Company B'
 limit 1
 ;
-
+ 
+ 
 -- QUESTION 1 - I would like a job in the Energy indutry with relatively few employees, and I will require at least 3 weeks paid vaction per year.
 
 select company_name, industry,
@@ -79,6 +92,7 @@ where paid_time_off_days >14
 and industry = 'Energy'
 order by employees
 ;
+
 
 -- QUESTION 2 - What is the average revenue of each industry, and which industries make the most money?
 
@@ -98,6 +112,7 @@ where healthcare_benefits = 1
 and avg_employee_tenure >7
 order by avg_employee_tenure desc
 ;
+
 
 -- QUESTION 4 Which industries provide an average of at least 8 weeks maternity leave?
 
@@ -121,4 +136,30 @@ group by industry
 order by company_name
 ;
 
--- End of work --
+
+-- QUESTION 6 - I take vacations one week at a time. Show me the PTO breakdown of each company in terms of weeks.
+
+select company_name,
+paid_time_off_days,
+case 
+when paid_time_off_days >19 then 'Four Weeks'
+when paid_time_off_days >14 then 'Three Weeks'
+when paid_time_off_days >9 then 'Two Weeks'
+when paid_time_off_days >4 then 'One Week'
+else 'Less than One Week'
+end as PTO_Weeks
+from fortune_companies
+;
+
+
+-- QUESTION 7 - How much revenue, on average, is each employee bringing into the company, and which employees are producing the least?
+
+select company_name,
+revenue as revenue_in_millions,
+round ((revenue*1000000) / employees,0) as revenue_contributed
+from fortune_companies
+order by revenue_contributed asc
+;
+
+
+--- End of Work ---
